@@ -1,6 +1,13 @@
-export default function Home(){
+import { UserProvider } from "../../context/User";
+import { HomeContainer } from "../../style/Home";
+import Find from "./Find";
 
-    return(
-        <div>home</div>
-    )
+export default function Home() {
+  return (
+    <UserProvider>
+      <HomeContainer>
+        <Find />
+      </HomeContainer>
+    </UserProvider>
+  );
 }
