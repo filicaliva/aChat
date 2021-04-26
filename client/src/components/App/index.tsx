@@ -5,10 +5,12 @@ import Search from "../Search";
 import Home from "../Home";
 
 import { Container, Wrapper } from "../../style/shared/Wrapper";
+import Logo from "./Logo";
 
 function App() {
   return (
     <Container>
+    <Logo/>
       <Router>
         <Wrapper>
           <Switch>

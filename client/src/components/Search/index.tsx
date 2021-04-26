@@ -1,6 +1,11 @@
+import {SearchButton} from '../../style/Home/Search'
+
+
 export default function Search(){
 
     return(
-        <div>search</div>
+        <SearchButton>
+            Поиск
+        </SearchButton>
     )
 }
