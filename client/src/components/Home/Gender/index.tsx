@@ -8,6 +8,8 @@ import { genders as variables } from "../variables";
 import { GridContainer } from "../../../style/shared/Wrapper";
 import ContainerHome from "../ContainerHome";
 
+import { STORAGE_GENDER, STORAGE_GENDER_FIND, STORAGE_GENDER_PERSONAL } from "../../../services/variables";
+
 function setClass({ bool, cssClass }: setClassType) {
   return bool ? `${cssClass} active` : cssClass;
 }
@@ -24,10 +26,10 @@ export default function Gender() {
     let result = arr;
 
     if (personal) {
-      const lstore = state.personalGender;
+      const localStore = state.STORAGE_GENDER_PERSONAL;
 
       result = result.map((item) => {
-        if (item.id === +lstore) {
+        if (item.id === +localStore) {
           return { ...item, isActive: true };
         }
         return item;
@@ -35,10 +37,10 @@ export default function Gender() {
     }
 
     if (!personal) {
-      const lstore = state.findGender;
+      const localStore = state.STORAGE_GENDER_FIND;
 
       result = result.map((item) => {
-        if (lstore.some((id) => item.id === +id)) {
+        if (localStore.some((id) => item.id === +id)) {
           return { ...item, isActive: true };
         }
         return item;
@@ -60,7 +62,7 @@ export default function Gender() {
   function personalChangeActive(id: number) {
     let result,
       dispatchVal = id,
-      dispatchAccess = false;
+      isDispatchAccess = false;
 
     result = gender.map((item) => {
       if (item.id === id) {
@@ -72,11 +74,17 @@ export default function Gender() {
     if (isAllItemsNotActive(result) || result[0].isActive === true) {
       result[0].isActive = true;
       dispatchVal = 0;
-      dispatchAccess = true;
+      isDispatchAccess = true;
       findChangeActive(0);
     }
-    dispatch({ type: "change_gender_personal", payload: dispatchVal });
-    dispatch({ type: "change_gender_find_access", payload: dispatchAccess });
+    dispatch({ type: "change_option", payload: {
+      value: dispatchVal, 
+      localStorage: STORAGE_GENDER_PERSONAL
+    } });
+    dispatch({
+      type: "change_access",
+      payload: { isAccess: isDispatchAccess, localStorage: STORAGE_GENDER },
+    });
 
     setGender(result);
   }
@@ -109,7 +117,10 @@ export default function Gender() {
 
     if (dispatchVal.length === 0) dispatchVal.push(0);
 
-    dispatch({ type: "change_gender_find", payload: dispatchVal });
+    dispatch({ type: "change_option", payload: {
+      value: dispatchVal, 
+      localStorage: STORAGE_GENDER_FIND
+    } });
     setGenderFind(result);
   }
 
@@ -130,7 +141,7 @@ export default function Gender() {
               key={key}
               className={setClass({
                 bool: item.isActive,
-                cssClass: state.color,
+                cssClass: state.STORAGE_COLOR,
               })}
               value={item.id}
               data-personal={true}
@@ -148,10 +159,10 @@ export default function Gender() {
               key={key}
               className={setClass({
                 bool: item.isActive,
-                cssClass: state.color,
+                cssClass: state.STORAGE_COLOR,
               })}
               value={item.id}
-              disabled={state.findGenderLocal}
+              disabled={state.STORAGE_GENDER}
               data-personal={false}
             >
               {item.title}

@@ -1,9 +1,6 @@
 export interface ILocalStorage {
-    theme: string;
-    color: string;
-    setTheme(theme: string): string;
-    setColor(color: string): string;
-    getTheme(): string | null;
-    getColor(): string;
+    setOption(text: string, value: any): any;
+    getLocalAccess(text: string): boolean;
+    getState(name: string): any;
 }
 

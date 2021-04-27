@@ -1,0 +1,14 @@
+const STORAGE_OLD = "findOldLocal";
+const STORAGE_GENDER = "findGenderLocal";
+
+const STORAGE_GENDER_FIND = "findGender";
+const STORAGE_GENDER_PERSONAL = "personalGender";
+
+const STORAGE_OLD_FIND = "findOld";
+const STORAGE_OLD_PERSONAL = "personalOld";
+
+const STORAGE_THEME = "theme";
+const STORAGE_COLOR = "color";
+const STORAGE_DESCRIBE = "describe";
+
+export { STORAGE_THEME, STORAGE_COLOR, STORAGE_DESCRIBE, STORAGE_OLD, STORAGE_GENDER, STORAGE_GENDER_FIND, STORAGE_OLD_PERSONAL, STORAGE_GENDER_PERSONAL, STORAGE_OLD_FIND }

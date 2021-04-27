@@ -1,21 +1,33 @@
 import * as React from "react";
 import userReducer from "./UserReducer";
-import {LocalStorage} from '../services/LocalStorage'
+import { LocalStorage } from "../services/LocalStorage";
 import { UserProvideProps, State, Dispatch } from "./UserType";
 
-const localstorage = new LocalStorage();
+import {
+  STORAGE_GENDER,
+  STORAGE_GENDER_FIND,
+  STORAGE_GENDER_PERSONAL,
+  STORAGE_OLD,
+  STORAGE_OLD_FIND,
+  STORAGE_OLD_PERSONAL,
+  STORAGE_THEME,
+  STORAGE_COLOR,
+  STORAGE_DESCRIBE,
+} from "../services/variables";
+
+const localStore = new LocalStorage();
 
 const initialValue = {
-  theme: localstorage.getTheme(),
-  color: localstorage.getColor(),
-  describe: localstorage.getDescribe(),
-  findGenderLocal: localstorage.getLocalAccess("findGenderLocal"),
-  personalGender: localstorage.getGender("personalGender"),
-  findGender: localstorage.getGender("findGender"),
-  personalOld: localstorage.getOld("personalOld"),
-  findOld: localstorage.getOld("findOld"),
-  findOldLocal: localstorage.getLocalAccess("findGenderLocal"),
-}
+  STORAGE_THEME          : localStore.getState(STORAGE_THEME),
+  STORAGE_COLOR          : localStore.getState(STORAGE_COLOR),
+  STORAGE_DESCRIBE       : localStore.getState(STORAGE_DESCRIBE),
+  STORAGE_OLD            : localStore.getLocalAccess(STORAGE_OLD),
+  STORAGE_OLD_FIND       : localStore.getState(STORAGE_OLD_FIND),
+  STORAGE_OLD_PERSONAL   : localStore.getState(STORAGE_OLD_PERSONAL),
+  STORAGE_GENDER         : localStore.getLocalAccess(STORAGE_GENDER),
+  STORAGE_GENDER_FIND    : localStore.getState(STORAGE_GENDER_FIND),
+  STORAGE_GENDER_PERSONAL: localStore.getState(STORAGE_GENDER_PERSONAL),
+};
 
 const UserStateContext = React.createContext<
   { state: State; dispatch: Dispatch } | undefined

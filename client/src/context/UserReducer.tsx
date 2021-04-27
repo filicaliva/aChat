@@ -1,76 +1,93 @@
 import { State, Action } from "./UserType";
 import { LocalStorage } from "../services/LocalStorage";
 
+import {
+  STORAGE_COLOR,
+  STORAGE_DESCRIBE,
+  STORAGE_GENDER,
+  STORAGE_GENDER_FIND,
+  STORAGE_GENDER_PERSONAL,
+  STORAGE_OLD,
+  STORAGE_OLD_FIND,
+  STORAGE_OLD_PERSONAL,
+  STORAGE_THEME,
+} from "../services/variables";
+
 export default function userReducer(state: State, action: Action) {
-  const locstore = new LocalStorage();
+  const localStore = new LocalStorage();
 
   switch (action.type) {
-    case "change_color": {
-      const result: string = action.payload.toString();
-      locstore.setColor(result);
+    // case "change_color": {
+    //   const result: string = action.payload.toString();
+    //   localStore.setColor(result);
 
-      return { ...state, color: result };
-    }
-    case "change_theme": {
-      const result: string = action.payload.toString();
-      locstore.setTheme(result);
+    //   return { ...state, color: result };
+    // }
+    // case "change_theme": {
+    //   const result: string = action.payload.toString();
+    //   localStore.setTheme(result);
 
-      return { ...state, theme: result };
-    }
+    //   return { ...state, theme: result };
+    // }
 
-    case "change_description": {
-      const result: string = action.payload.toString();
-      locstore.setDescribe(result);
+    // case "change_description": {
+    //   const result: string = action.payload.toString();
+    //   localStore.setDescribe(result);
 
-      return { ...state, describe: result };
-    }
+    //   return { ...state, describe: result };
+    // }
 
-    case "change_gender_find_access": {
-      const result: boolean = action.payload === true;
-      locstore.setOption("findGenderLocal", result);
+    case "change_access": {
+      const result: boolean = action.payload.isAccess === true;
+      const storageName: string = action.payload.localStorage;
 
-      if (result) {
-        locstore.setOption("findGenderLocal", result);
-      }
-
-      return { ...state, findGenderLocal: result };
-    }
-
-    case "change_old_find_access": {
-      const result: boolean = action.payload === true;
-      locstore.setOption("findOldLocal", result);
+      localStore.setOption(storageName, result);
 
       if (result) {
-        locstore.setOption("findOldLocal", result);
+        localStore.setOption(storageName, result);
       }
 
-      return { ...state, findOldLocal: result };
+      switch (storageName) {
+        case STORAGE_GENDER:
+          return { ...state, STORAGE_GENDER: result };
+        case STORAGE_OLD:
+          return { ...state, STORAGE_OLD: result };
+        default:
+          throw new Error("change_access: error with type");
+      }
     }
 
-    case "change_gender_personal": {
-      const result: number = +action.payload;
-      locstore.setOption("personalGender", result);
-      return { ...state, personalGender: result };
-    }
+    case "change_option": {
+      const result: any = action.payload.value;
+      const storageName: string = action.payload.localStorage;
 
-    case "change_gender_find": {
-      const result: any = action.payload;
-      locstore.setOption("findGender", result);
+      localStore.setOption(storageName, result);
 
-      return { ...state, findGender: result };
-    }
+      switch (storageName) {
+        case STORAGE_GENDER_PERSONAL:
+          return { ...state, STORAGE_GENDER_PERSONAL: result };
 
-    case "change_old_personal": {
-      const result: number = +action.payload;
-      locstore.setOption("personalOld", result);
-      return { ...state, personalOld: result };
-    }
+        case STORAGE_GENDER_FIND:
+          return { ...state, STORAGE_GENDER_FIND: result };
 
-    case "change_old_find": {
-      const result: any = action.payload;
-      locstore.setOption("findOld", result);
+        case STORAGE_OLD_PERSONAL:
+          return { ...state, STORAGE_OLD_PERSONAL: result };
 
-      return { ...state, findOld: result };
+        case STORAGE_OLD_FIND:
+          return { ...state, STORAGE_OLD_FIND: result };
+
+        case STORAGE_THEME:
+          return { ...state, STORAGE_THEME: result };
+
+        case STORAGE_COLOR:
+          return { ...state, STORAGE_COLOR: result };
+
+        case STORAGE_DESCRIBE:
+          return { ...state, STORAGE_DESCRIBE: result };
+
+        default:
+          throw new Error("change_option: error with type");
+      }
     }
 
     default: {

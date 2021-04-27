@@ -7,6 +7,7 @@ import { setClassType, VariableType } from "./types";
 import { old as variables } from "../variables";
 import { GridContainer } from "../../../style/shared/Wrapper";
 import ContainerHome from "../ContainerHome";
+import { STORAGE_OLD, STORAGE_OLD_FIND, STORAGE_OLD_PERSONAL } from "../../../services/variables";
 
 function setClass({ bool, cssClass }: setClassType) {
   return bool ? `${cssClass} active` : cssClass;
@@ -24,10 +25,10 @@ export default function OldYear() {
     let result = arr;
 
     if (personal) {
-      const lstore = state.personalGender;
+      const localStore = state.STORAGE_GENDER_PERSONAL;
 
       result = result.map((item) => {
-        if (item.id === +lstore) {
+        if (item.id === +localStore) {
           return { ...item, isActive: true };
         }
         return item;
@@ -35,10 +36,10 @@ export default function OldYear() {
     }
 
     if (!personal) {
-      const lstore = state.findGender;
+      const localStore = state.STORAGE_GENDER_FIND;
 
       result = result.map((item) => {
-        if (lstore.some((id) => item.id === +id)) {
+        if (localStore.some((id) => item.id === +id)) {
           return { ...item, isActive: true };
         }
         return item;
@@ -60,7 +61,7 @@ export default function OldYear() {
   function personalChangeActive(id: number) {
     let result,
       dispatchVal = id,
-      dispatchAccess = false;
+      isDispatchAccess = false;
 
     result = gender.map((item) => {
       if (item.id === id) {
@@ -72,11 +73,20 @@ export default function OldYear() {
     if (isAllItemsNotActive(result) || result[0].isActive === true) {
       result[0].isActive = true;
       dispatchVal = 0;
-      dispatchAccess = true;
+      isDispatchAccess = true;
       findChangeActive(0);
     }
-    dispatch({ type: "change_old_personal", payload: dispatchVal });
-    dispatch({ type: "change_old_find_access", payload: dispatchAccess });
+    dispatch({ type: "change_option", payload: {
+      value: dispatchVal, 
+      localStorage: STORAGE_OLD_PERSONAL
+    } });
+    dispatch({
+      type: "change_access",
+      payload: {
+        isAccess: isDispatchAccess,
+        localStorage: STORAGE_OLD,
+      },
+    });
 
     setGender(result);
   }
@@ -109,7 +119,10 @@ export default function OldYear() {
 
     if (dispatchVal.length === 0) dispatchVal.push(0);
 
-    dispatch({ type: "change_old_find", payload: dispatchVal });
+    dispatch({ type: "change_option", payload: {
+      value: dispatchVal, 
+      localStorage: STORAGE_OLD_FIND
+    } });
     setGenderFind(result);
   }
 
@@ -118,12 +131,12 @@ export default function OldYear() {
   }
 
   useEffect(() => {
-    if (!state.findGenderLocal) {
+    if (!state.STORAGE_GENDER) {
       personalChangeActive(0);
     }
 
     // eslint-disable-next-line
-  }, [state.findGenderLocal]);
+  }, [state.STORAGE_GENDER]);
 
   return (
     <GridContainer
@@ -138,11 +151,11 @@ export default function OldYear() {
               key={key}
               className={setClass({
                 bool: item.isActive,
-                cssClass: state.color,
+                cssClass: state.STORAGE_COLOR,
               })}
               value={item.id}
               data-personal={true}
-              disabled={state.findGenderLocal}
+              disabled={state.STORAGE_GENDER}
             >
               {item.title}
             </OldButton>
@@ -157,10 +170,10 @@ export default function OldYear() {
               key={key}
               className={setClass({
                 bool: item.isActive,
-                cssClass: state.color,
+                cssClass: state.STORAGE_COLOR,
               })}
               value={item.id}
-              disabled={state.findGenderLocal || state.findOldLocal}
+              disabled={state.STORAGE_GENDER || state.STORAGE_OLD}
               data-personal={false}
             >
               {item.title}

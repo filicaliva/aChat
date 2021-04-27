@@ -2,17 +2,19 @@ import React from "react";
 
 type Action = {
   type: string;
-  payload: string | number | boolean | Array<number>;
+  payload: any;
 };
 
 type State = {
-  theme: string;
-  color: string;
-  describe: string;
-  findGenderLocal: boolean;
-  personalGender: number;
-  findGender: Array<number>;
-  findOldLocal: boolean;
+  STORAGE_THEME: string;
+  STORAGE_COLOR: string;
+  STORAGE_DESCRIBE: string;
+  STORAGE_GENDER: boolean;
+  STORAGE_GENDER_PERSONAL: number;
+  STORAGE_GENDER_FIND: Array<number>;
+  STORAGE_OLD: boolean;
+  STORAGE_OLD_PERSONAL: number;
+  STORAGE_OLD_FIND: Array<number>;
 };
 
 type Dispatch = (action: Action) => void;

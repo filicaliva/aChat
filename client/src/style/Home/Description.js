@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { themeColor, transition } from "../shared/variables";
 
-const DescriptionContaner = styled.div`
+const DescriptionContainer = styled.div`
   width: 60%;
   @media (max-width: 440px) {
     width: 93%;
@@ -27,4 +27,4 @@ const Input = styled.input`
   }
 `;
 
-export { DescriptionContaner, Input };
+export { DescriptionContainer, Input };
