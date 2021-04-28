@@ -2,52 +2,42 @@ import React, { useState } from "react";
 import { UserChange } from "../../../context/User/User";
 import { Button } from "../../../style/shared/Buttons";
 
-import { setClassType, VariableType } from "./types";
-
 import { genders as variables } from "../variables";
 import { GridContainer } from "../../../style/shared/Wrapper";
 import ContainerHome from "../ContainerHome";
 
-import { STORAGE_GENDER, STORAGE_GENDER_FIND, STORAGE_GENDER_PERSONAL } from "../../../services/variables";
+import {
+  setClass,
+  isAllItemsNotActive,
+  initGender,
+  storageFind
+} from "./logic";
 
-function setClass({ bool, cssClass }: setClassType) {
-  return bool ? `${cssClass} active` : cssClass;
-}
-export default function Gender() {
-  // REFACTOR: gender and oldyear
+import {
+  STORAGE_GENDER,
+  STORAGE_GENDER_FIND,
+  STORAGE_GENDER_PERSONAL,
+} from "../../../services/variables";
+
+export default function ContainerOption() {
   const { state, dispatch } = UserChange();
 
-  const [gender, setGender] = useState(() => initGender(variables, true));
-  const [genderFind, setGenderFind] = useState(() =>
-    initGender(variables, false)
+  const [gender, setGender] = useState(() =>
+    initGender(
+      variables,
+      true,
+      state.STORAGE_GENDER_PERSONAL,
+      state.STORAGE_GENDER_FIND
+    )
   );
-
-  function initGender(arr: Array<VariableType>, personal: boolean) {
-    let result = arr;
-
-    if (personal) {
-      const localStore = state.STORAGE_GENDER_PERSONAL;
-
-      result = result.map((item) => {
-        if (item.id === +localStore) {
-          return { ...item, isActive: true };
-        }
-        return item;
-      });
-    }
-
-    if (!personal) {
-      const localStore = state.STORAGE_GENDER_FIND;
-
-      result = result.map((item) => {
-        if (localStore.some((id) => item.id === +id)) {
-          return { ...item, isActive: true };
-        }
-        return item;
-      });
-    }
-    return result;
-  }
+  const [genderFind, setGenderFind] = useState(() =>
+    initGender(
+      variables,
+      false,
+      state.STORAGE_GENDER_PERSONAL,
+      state.STORAGE_GENDER_FIND
+    )
+  );
 
   function handleChangeActive(target: any) {
     const type = target.dataset.personal;
@@ -55,7 +45,13 @@ export default function Gender() {
     if (type === "true") {
       personalChangeActive(+target.value);
     } else {
-      findChangeActive(+target.value);
+      storageFind(
+        +target.value,
+        genderFind,
+        setGenderFind,
+        STORAGE_GENDER_FIND,
+        dispatch
+      );
     }
   }
 
@@ -75,57 +71,21 @@ export default function Gender() {
       result[0].isActive = true;
       dispatchVal = 0;
       isDispatchAccess = true;
-      findChangeActive(0);
+      storageFind(0, genderFind, setGenderFind, STORAGE_GENDER_FIND, dispatch);
     }
-    dispatch({ type: "change_option", payload: {
-      value: dispatchVal, 
-      localStorage: STORAGE_GENDER_PERSONAL
-    } });
+    dispatch({
+      type: "change_option",
+      payload: {
+        value: dispatchVal,
+        localStorage: STORAGE_GENDER_PERSONAL,
+      },
+    });
     dispatch({
       type: "change_access",
       payload: { isAccess: isDispatchAccess, localStorage: STORAGE_GENDER },
     });
 
     setGender(result);
-  }
-
-  function findChangeActive(id: number) {
-    let result,
-      dispatchVal: Array<number> = [];
-
-    result = genderFind.map((item) => {
-      if (item.id === id) {
-        return { ...item, isActive: !item.isActive };
-      }
-
-      if ((item.id === 0 && id !== 0) || (item.id !== 0 && id === 0)) {
-        return { ...item, isActive: false };
-      }
-      return item;
-    });
-
-    if (isAllItemsNotActive(result)) {
-      result[0].isActive = true;
-    }
-
-    for (let i = 0; i < result.length; i++) {
-      const item = result[i];
-      if (item.isActive) {
-        dispatchVal.push(item.id);
-      }
-    }
-
-    if (dispatchVal.length === 0) dispatchVal.push(0);
-
-    dispatch({ type: "change_option", payload: {
-      value: dispatchVal, 
-      localStorage: STORAGE_GENDER_FIND
-    } });
-    setGenderFind(result);
-  }
-
-  function isAllItemsNotActive(arr: Array<VariableType>) {
-    return arr.every((item: VariableType) => item.isActive === false);
   }
 
   return (

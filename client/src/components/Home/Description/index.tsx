@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { UserChange } from "../../../context/User";
-import { STORAGE_COLOR, STORAGE_DESCRIBE } from "../../../services/variables";
+import { UserChange } from "../../../context/User/User";
+import { STORAGE_DESCRIBE } from "../../../services/variables";
 import { DescriptionContainer, Input } from "../../../style/Home/Description";
 
 export default function Description() {

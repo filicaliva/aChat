@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { UserChange } from "../../../context/User";
+import { UserChange } from "../../../context/User/User";
 import { OldButton } from "../../../style/Home/Old";
 
 import { setClassType, VariableType } from "./types";

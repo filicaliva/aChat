@@ -2,7 +2,7 @@ import ContainerHome from "./ContainerHome";
 import Theme from "./Themes";
 import Description from "./Description";
 import Search from "../Search";
-import { UserProvider } from "../../context/User";
+import { UserProvider } from "../../context/User/User";
 
 import { HomeContainer } from "../../style/Home";
 import Gender from "./Gender";
@@ -22,7 +22,7 @@ export default function Home() {
         <Gender />
 
         <OldYear/>
-        
+
         <Search />
       </HomeContainer>
     </UserProvider>

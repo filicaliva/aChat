@@ -3,7 +3,7 @@ import React from "react";
 import { ThemeContainer, ThemeButton } from "../../../style/Home/Themes";
 import { isActiveClassType, ThemesType } from "./types";
 import { themes as theme } from "../variables";
-import { UserChange } from "../../../context/User";
+import { UserChange } from "../../../context/User/User";
 import { STORAGE_COLOR, STORAGE_THEME } from "../../../services/variables";
 
 function setClass({ bool, color }: isActiveClassType) {

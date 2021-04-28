@@ -1,5 +1,5 @@
 import { State, Action } from "./UserType";
-import { LocalStorage } from "../services/LocalStorage";
+import { LocalStorage } from "../../services/LocalStorage";
 
 import {
   STORAGE_COLOR,
@@ -11,31 +11,12 @@ import {
   STORAGE_OLD_FIND,
   STORAGE_OLD_PERSONAL,
   STORAGE_THEME,
-} from "../services/variables";
+} from "../../services/variables";
 
 export default function userReducer(state: State, action: Action) {
   const localStore = new LocalStorage();
 
   switch (action.type) {
-    // case "change_color": {
-    //   const result: string = action.payload.toString();
-    //   localStore.setColor(result);
-
-    //   return { ...state, color: result };
-    // }
-    // case "change_theme": {
-    //   const result: string = action.payload.toString();
-    //   localStore.setTheme(result);
-
-    //   return { ...state, theme: result };
-    // }
-
-    // case "change_description": {
-    //   const result: string = action.payload.toString();
-    //   localStore.setDescribe(result);
-
-    //   return { ...state, describe: result };
-    // }
 
     case "change_access": {
       const result: boolean = action.payload.isAccess === true;

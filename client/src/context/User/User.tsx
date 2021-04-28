@@ -1,6 +1,6 @@
 import * as React from "react";
 import userReducer from "./UserReducer";
-import { LocalStorage } from "../services/LocalStorage";
+import { LocalStorage } from "../../services/LocalStorage";
 import { UserProvideProps, State, Dispatch } from "./UserType";
 
 import {
@@ -13,7 +13,7 @@ import {
   STORAGE_THEME,
   STORAGE_COLOR,
   STORAGE_DESCRIBE,
-} from "../services/variables";
+} from "../../services/variables";
 
 const localStore = new LocalStorage();
 
