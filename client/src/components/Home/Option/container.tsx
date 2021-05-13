@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { UserChange } from "../../../context/User/User";
 import { Button } from "../../../style/shared/Buttons";
 
-import { genders as variables } from "../variables";
+import { genders as variables } from "../constant/variables";
 import { GridContainer } from "../../../style/shared/Wrapper";
 import ContainerHome from "../ContainerHome";
 
@@ -10,8 +10,11 @@ import {
   setClass,
   isAllItemsNotActive,
   initGender,
-  storageFind
+  // storageFind,
+  handleChangeActive,
 } from "./logic";
+
+import { CHANGE_PERSONAL, CHANGE_FIND } from "../../../context/Option/constant";
 
 import {
   STORAGE_GENDER,
@@ -19,83 +22,45 @@ import {
   STORAGE_GENDER_PERSONAL,
 } from "../../../services/variables";
 
-export default function ContainerOption() {
+import { OptionChange } from "../../../context/Option/Option";
+import { VariableType } from "../Gender/types";
+
+type ContainerOptionType = {
+  personal_title: string;
+  find_title: string;
+  isGender: boolean;
+  personalState: Array<VariableType>;
+  findState: Array<VariableType>;
+};
+
+export default function ContainerOption({
+  personal_title,
+  find_title,
+  isGender,
+  personalState,
+  findState,
+}: ContainerOptionType) {
   const { state, dispatch } = UserChange();
+  const dispatchOption = OptionChange().dispatch;
 
-  const [gender, setGender] = useState(() =>
-    initGender(
-      variables,
-      true,
-      state.STORAGE_GENDER_PERSONAL,
-      state.STORAGE_GENDER_FIND
-    )
-  );
-  const [genderFind, setGenderFind] = useState(() =>
-    initGender(
-      variables,
-      false,
-      state.STORAGE_GENDER_PERSONAL,
-      state.STORAGE_GENDER_FIND
-    )
-  );
+  let personal = initGender(personalState, true, state.STORAGE_GENDER_PERSONAL);
+  let find = initGender(findState, false, state.STORAGE_GENDER_FIND);
 
-  function handleChangeActive(target: any) {
-    const type = target.dataset.personal;
-
-    if (type === "true") {
-      personalChangeActive(+target.value);
-    } else {
-      storageFind(
-        +target.value,
-        genderFind,
-        setGenderFind,
-        STORAGE_GENDER_FIND,
-        dispatch
-      );
-    }
-  }
-
-  function personalChangeActive(id: number) {
-    let result,
-      dispatchVal = id,
-      isDispatchAccess = false;
-
-    result = gender.map((item) => {
-      if (item.id === id) {
-        return { ...item, isActive: !item.isActive };
-      }
-      return { ...item, isActive: false };
-    });
-
-    if (isAllItemsNotActive(result) || result[0].isActive === true) {
-      result[0].isActive = true;
-      dispatchVal = 0;
-      isDispatchAccess = true;
-      storageFind(0, genderFind, setGenderFind, STORAGE_GENDER_FIND, dispatch);
-    }
-    dispatch({
-      type: "change_option",
-      payload: {
-        value: dispatchVal,
-        localStorage: STORAGE_GENDER_PERSONAL,
-      },
-    });
-    dispatch({
-      type: "change_access",
-      payload: { isAccess: isDispatchAccess, localStorage: STORAGE_GENDER },
-    });
-
-    setGender(result);
-  }
+  useEffect(() => {
+    find = initGender(findState, false, state.STORAGE_GENDER_FIND);
+    personal = initGender(personalState, true, state.STORAGE_GENDER_PERSONAL);
+  }, [state.STORAGE_GENDER]);
 
   return (
     <GridContainer
       onClick={(e: React.ChangeEvent<HTMLButtonElement>) =>
-        e !== undefined ? handleChangeActive(e.target) : null
+        e !== undefined
+          ? handleChangeActive(e.target, isGender, dispatch, dispatchOption)
+          : null
       }
     >
-      <ContainerHome title={"Ваш пол:"}>
-        {gender.map((item, key) => {
+      <ContainerHome title={personal_title}>
+        {personal.map((item, key) => {
           return (
             <Button
               key={key}
@@ -112,8 +77,8 @@ export default function ContainerOption() {
         })}
       </ContainerHome>
 
-      <ContainerHome title={"Пол собеседника:"}>
-        {genderFind.map((item, key) => {
+      <ContainerHome title={find_title}>
+        {find.map((item, key) => {
           return (
             <Button
               key={key}

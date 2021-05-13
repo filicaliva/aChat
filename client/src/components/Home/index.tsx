@@ -7,6 +7,7 @@ import { UserProvider } from "../../context/User/User";
 import { HomeContainer } from "../../style/Home";
 import Gender from "./Gender";
 import OldYear from "./Old";
+import Option from "./Option";
 
 export default function Home() {
   return (
@@ -19,9 +20,9 @@ export default function Home() {
           <Description />
         </ContainerHome>
 
-        <Gender />
+        <Option />
 
-        <OldYear/>
+        {/* <OldYear /> */}
 
         <Search />
       </HomeContainer>

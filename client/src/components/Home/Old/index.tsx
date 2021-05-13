@@ -4,7 +4,7 @@ import { OldButton } from "../../../style/Home/Old";
 
 import { setClassType, VariableType } from "./types";
 
-import { old as variables } from "../variables";
+import { old as variables } from "../constant/variables";
 import { GridContainer } from "../../../style/shared/Wrapper";
 import ContainerHome from "../ContainerHome";
 import { STORAGE_OLD, STORAGE_OLD_FIND, STORAGE_OLD_PERSONAL } from "../../../services/variables";

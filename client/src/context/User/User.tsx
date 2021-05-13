@@ -52,4 +52,4 @@ function UserChange() {
   return context;
 }
 
-export { UserProvider, UserChange };
+export { UserProvider, UserChange, UserStateContext };

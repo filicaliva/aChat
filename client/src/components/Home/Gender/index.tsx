@@ -4,7 +4,7 @@ import { Button } from "../../../style/shared/Buttons";
 
 import { setClassType, VariableType } from "./types";
 
-import { genders as variables } from "../variables";
+import { genders as variables } from "../constant/variables";
 import { GridContainer } from "../../../style/shared/Wrapper";
 import ContainerHome from "../ContainerHome";
 

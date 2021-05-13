@@ -1,32 +1,22 @@
 import * as React from "react";
 import optionReducer from "./OptionReducer";
-import { ProvideProps, State, Dispatch } from "./OptionType";
+
+import { genders, old } from "../../components/Home/constant/variables";
+import { Action } from "./OptionType";
 
 const initialValue = {
-  find_active_class: 0,
+  gender_state: genders,
+  gender_find_state: genders,
+  old_state: old,
+  old_find_state: old,
 };
 
-const UserStateContext = React.createContext<
-  { state: State; dispatch: Dispatch } | undefined
->(undefined);
-
-function OptionProvider({ children }: ProvideProps) {
-  const [state, dispatch] = React.useReducer(optionReducer, initialValue);
-
-  const value = { state, dispatch };
-  return (
-    <UserStateContext.Provider value={value}>
-      {children}
-    </UserStateContext.Provider>
-  );
-}
-
 function OptionChange() {
-  const context = React.useContext(UserStateContext);
-  if (context === undefined) {
-    throw new Error("OptionProvider must be used within a UserProvider");
-  }
-  return context;
+  const [state, setState] = React.useState(initialValue);
+  const dispatch = (action: Action) =>
+    setState(() => optionReducer(state, action));
+
+  return { state, dispatch };
 }
 
-export { OptionProvider, OptionChange };
+export { OptionChange };

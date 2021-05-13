@@ -2,7 +2,7 @@ import React from "react";
 
 import { ThemeContainer, ThemeButton } from "../../../style/Home/Themes";
 import { isActiveClassType, ThemesType } from "./types";
-import { themes as theme } from "../variables";
+import { themes as theme } from "../constant/variables";
 import { UserChange } from "../../../context/User/User";
 import { STORAGE_COLOR, STORAGE_THEME } from "../../../services/variables";
 

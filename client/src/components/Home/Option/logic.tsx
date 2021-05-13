@@ -1,5 +1,18 @@
 import { setClassType, VariableType, findChangeActiveType } from "./types";
 
+import {
+  STORAGE_GENDER,
+  STORAGE_GENDER_FIND,
+  STORAGE_GENDER_PERSONAL,
+  STORAGE_OLD_FIND,
+  STORAGE_OLD_PERSONAL,
+} from "../../../services/variables";
+
+import { UserChange } from "../../../context/User/User";
+import { OptionChange } from "../../../context/Option/Option";
+import { CHANGE_PERSONAL, CHANGE_FIND } from "../../../context/Option/constant";
+import { Action } from "../../../context/Option/OptionType";
+
 function setClass({ bool, cssClass }: setClassType) {
   return bool ? `${cssClass} active` : cssClass;
 }
@@ -11,88 +24,51 @@ function isAllItemsNotActive(arr: Array<VariableType>) {
 function initGender(
   arr: Array<VariableType>,
   personal: boolean,
-  storagePersonal: number,
-  storageFind: Array<number>
+  localStore: any
 ) {
   let result = arr;
 
-  if (personal) {
-    const localStore = storagePersonal;
+  const isPersonal = (personal: boolean, ...args: number[]) => {
+    if (personal) {
+      return args[0] === +localStore;
+    }
+    return localStore.some((id: number) => args[0] === +id);
+  };
 
-    result = result.map((item) => {
-      if (item.id === +localStore) {
-        return { ...item, isActive: true };
-      }
-      return item;
-    });
-  }
+  result = result.map((item) =>
+    isPersonal(personal, item.id) ? { ...item, isActive: true } : item
+  );
 
-  if (!personal) {
-    const localStore = storageFind;
-
-    result = result.map((item) => {
-      if (localStore.some((id) => item.id === +id)) {
-        return { ...item, isActive: true };
-      }
-      return item;
-    });
-  }
   return result;
 }
 
-function storageFind(
-  id: number,
-  storageFind: Array<VariableType>,
-  setFind: (result: Array<VariableType>) => void,
-  storageTitleFind: string,
-  dispatch: ({ type, payload }: findChangeActiveType) => void
+function handleChangeActive(
+  target: any,
+  isGender: boolean,
+  dispatchUser: (action: Action) => void,
+  dispatch: (action: Action) => void
 ) {
-  let result,
-    dispatchVal: Array<number> = [];
+  const isPersonal: boolean = target.dataset.personal == "true";  
 
-  result = storageFind.map((item) => {
-    if (item.id === id) {
-      return { ...item, isActive: !item.isActive };
-    }
-
-    if ((item.id === 0 && id !== 0) || (item.id !== 0 && id === 0)) {
-      return { ...item, isActive: false };
-    }
-    return item;
-  });
-
-  if (isAllItemsNotActive(result)) {
-    result[0].isActive = true;
+  if (isPersonal) {
+    dispatch({
+      type: CHANGE_PERSONAL,
+      payload: {
+        id: +target.value,
+        isGender,
+        dispatch: dispatchUser,
+      },
+    });
+    return;
   }
-
-  for (let i = 0; i < result.length; i++) {
-    const item = result[i];
-    if (item.isActive) {
-      dispatchVal.push(item.id);
-    }
-  }
-
-  if (dispatchVal.length === 0) dispatchVal.push(0);
-
   dispatch({
-    type: "change_option",
+    type: CHANGE_FIND,
     payload: {
-      value: dispatchVal,
-      localStorage: storageTitleFind,
+      id: +target.value,
+      isGender,
+      dispatch: dispatchUser,
     },
   });
-
-  setFind(result);
 }
-// TODO: 
-//dispatcher
-// initGender
-// storageFind
-// personalChangeActive
 
-// logic
-// setClass
-// isAllItemsNotActive
-// handleChangeActive
-
-export { setClass, isAllItemsNotActive, initGender, storageFind };
+export { setClass, isAllItemsNotActive, initGender, handleChangeActive };
