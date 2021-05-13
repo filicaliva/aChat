@@ -1,15 +1,5 @@
-import { setClassType, VariableType, findChangeActiveType } from "./types";
+import { setClassType, VariableType } from "./types";
 
-import {
-  STORAGE_GENDER,
-  STORAGE_GENDER_FIND,
-  STORAGE_GENDER_PERSONAL,
-  STORAGE_OLD_FIND,
-  STORAGE_OLD_PERSONAL,
-} from "../../../services/variables";
-
-import { UserChange } from "../../../context/User/User";
-import { OptionChange } from "../../../context/Option/Option";
 import { CHANGE_PERSONAL, CHANGE_FIND } from "../../../context/Option/constant";
 import { Action } from "../../../context/Option/OptionType";
 
@@ -21,7 +11,7 @@ function isAllItemsNotActive(arr: Array<VariableType>) {
   return arr.every((item: VariableType) => item.isActive === false);
 }
 
-function initGender(
+function initState(
   arr: Array<VariableType>,
   personal: boolean,
   localStore: any
@@ -48,7 +38,7 @@ function handleChangeActive(
   dispatchUser: (action: Action) => void,
   dispatch: (action: Action) => void
 ) {
-  const isPersonal: boolean = target.dataset.personal == "true";  
+  const isPersonal: boolean = target.dataset.personal === "true";
 
   if (isPersonal) {
     dispatch({
@@ -71,4 +61,19 @@ function handleChangeActive(
   });
 }
 
-export { setClass, isAllItemsNotActive, initGender, handleChangeActive };
+function getStateStorage(value: any) {
+  const { state, isGender, personal } = value;
+
+  if (isGender) {
+    return personal ? state.STORAGE_GENDER_PERSONAL : state.STORAGE_GENDER_FIND;
+  }
+  return personal ? state.STORAGE_OLD_PERSONAL : state.STORAGE_OLD_FIND;
+}
+
+export {
+  setClass,
+  isAllItemsNotActive,
+  initState,
+  handleChangeActive,
+  getStateStorage,
+};

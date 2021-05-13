@@ -1,6 +1,5 @@
 import { State, Action } from "./OptionType";
 import { VariableType } from "../../components/Home/constant/variablesType";
-import { UserChange } from "../User/User";
 
 import { CHANGE_FIND, CHANGE_PERSONAL } from "./constant";
 
@@ -10,6 +9,7 @@ import {
   STORAGE_GENDER_PERSONAL,
   STORAGE_OLD_FIND,
   STORAGE_GENDER_FIND,
+  STORAGE_OLD_PERSONAL,
 } from "../../services/variables";
 
 function isAllItemsNotActive(arr: Array<VariableType>) {
@@ -24,18 +24,11 @@ export default function optionReducer(state: State, action: Action) {
       let dispatchVal = id,
         isDispatchAccess = false;
 
-      let result = state.gender_state.map((item) => {
+      const stateMap = isGender ? state.gender_state : state.old_state;
+
+      let result = stateMap.map((item) => {
         if (item.id === id) {
-          console.log("id: ", item.id, !item.isActive);
-
           return { ...item, isActive: !item.isActive };
-        }
-        return { ...item, isActive: false };
-      });
-
-      let gender_find_state = state.gender_find_state.map((item) => {
-        if (item.id === 0) {
-          return { ...item, isActive: true };
         }
         return { ...item, isActive: false };
       });
@@ -48,16 +41,35 @@ export default function optionReducer(state: State, action: Action) {
           type: "change_option",
           payload: {
             value: [0],
-            localStorage: STORAGE_GENDER_FIND,
+            localStorage: STORAGE_OLD_FIND,
           },
         });
+        if (isGender) {
+          dispatch({
+            type: "change_option",
+            payload: {
+              value: [0],
+              localStorage: STORAGE_GENDER_FIND,
+            },
+          });
+
+          dispatch({
+            type: "change_option",
+            payload: {
+              value: 0,
+              localStorage: STORAGE_OLD_PERSONAL,
+            },
+          });
+        }
       }
 
       dispatch({
         type: "change_option",
         payload: {
           value: dispatchVal,
-          localStorage: STORAGE_GENDER_PERSONAL,
+          localStorage: isGender
+            ? STORAGE_GENDER_PERSONAL
+            : STORAGE_OLD_PERSONAL,
         },
       });
 
@@ -68,11 +80,6 @@ export default function optionReducer(state: State, action: Action) {
           localStorage: isGender ? STORAGE_GENDER : STORAGE_OLD,
         },
       });
-      console.log(id, result);
-
-      if (isGender && isDispatchAccess) {
-        return { ...state, gender_state: result, gender_find_state };
-      }
 
       if (isGender) {
         return { ...state, gender_state: result };

@@ -14,7 +14,7 @@ const initialValue = {
 function OptionChange() {
   const [state, setState] = React.useState(initialValue);
   const dispatch = (action: Action) =>
-    setState(() => optionReducer(state, action));
+    setState(optionReducer(state, action));
 
   return { state, dispatch };
 }

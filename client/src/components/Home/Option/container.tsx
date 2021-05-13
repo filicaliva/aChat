@@ -2,36 +2,18 @@ import React, { useEffect, useState } from "react";
 import { UserChange } from "../../../context/User/User";
 import { Button } from "../../../style/shared/Buttons";
 
-import { genders as variables } from "../constant/variables";
 import { GridContainer } from "../../../style/shared/Wrapper";
 import ContainerHome from "../ContainerHome";
 
 import {
   setClass,
-  isAllItemsNotActive,
-  initGender,
-  // storageFind,
+  initState,
   handleChangeActive,
+  getStateStorage,
 } from "./logic";
 
-import { CHANGE_PERSONAL, CHANGE_FIND } from "../../../context/Option/constant";
-
-import {
-  STORAGE_GENDER,
-  STORAGE_GENDER_FIND,
-  STORAGE_GENDER_PERSONAL,
-} from "../../../services/variables";
-
 import { OptionChange } from "../../../context/Option/Option";
-import { VariableType } from "../Gender/types";
-
-type ContainerOptionType = {
-  personal_title: string;
-  find_title: string;
-  isGender: boolean;
-  personalState: Array<VariableType>;
-  findState: Array<VariableType>;
-};
+import { ContainerOptionType } from "./types";
 
 export default function ContainerOption({
   personal_title,
@@ -43,13 +25,31 @@ export default function ContainerOption({
   const { state, dispatch } = UserChange();
   const dispatchOption = OptionChange().dispatch;
 
-  let personal = initGender(personalState, true, state.STORAGE_GENDER_PERSONAL);
-  let find = initGender(findState, false, state.STORAGE_GENDER_FIND);
+  const initPersonal = {
+    state,
+    isGender,
+    personal: true,
+  };
+  const initFind = {
+    state,
+    isGender,
+    personal: false,
+  };
+
+  let [personal, setPersonal] = useState(
+    initState(personalState, true, getStateStorage(initPersonal))
+  );
+
+  let [find, setFind] = useState(
+    initState(findState, false, getStateStorage(initFind))
+  );
 
   useEffect(() => {
-    find = initGender(findState, false, state.STORAGE_GENDER_FIND);
-    personal = initGender(personalState, true, state.STORAGE_GENDER_PERSONAL);
-  }, [state.STORAGE_GENDER]);
+    setPersonal(initState(personalState, true, getStateStorage(initPersonal)));
+    setFind(initState(findState, false, getStateStorage(initFind)));
+
+    // eslint-disable-next-line 
+  }, [state]);
 
   return (
     <GridContainer
@@ -70,6 +70,7 @@ export default function ContainerOption({
               })}
               value={item.id}
               data-personal={true}
+              disabled={!isGender ? state.STORAGE_GENDER : null}
             >
               {item.title}
             </Button>
@@ -87,7 +88,11 @@ export default function ContainerOption({
                 cssClass: state.STORAGE_COLOR,
               })}
               value={item.id}
-              disabled={state.STORAGE_GENDER}
+              disabled={
+                isGender
+                  ? state.STORAGE_GENDER
+                  : state.STORAGE_GENDER || state.STORAGE_OLD
+              }
               data-personal={false}
             >
               {item.title}

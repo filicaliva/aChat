@@ -20,11 +20,12 @@ type VariableType = {
 };
 
 type ContainerOptionType = {
-  variables: any;
-  storagePersonal: number;
-  storageFind: Array<number>;
-  storageAccess: string;
-}
+  personal_title: string;
+  find_title: string;
+  isGender: boolean;
+  personalState: Array<VariableType>;
+  findState: Array<VariableType>;
+};
 
 type findChangeActiveType = {
   type: string;

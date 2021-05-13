@@ -5,8 +5,6 @@ import Search from "../Search";
 import { UserProvider } from "../../context/User/User";
 
 import { HomeContainer } from "../../style/Home";
-import Gender from "./Gender";
-import OldYear from "./Old";
 import Option from "./Option";
 
 export default function Home() {
@@ -21,8 +19,6 @@ export default function Home() {
         </ContainerHome>
 
         <Option />
-
-        {/* <OldYear /> */}
 
         <Search />
       </HomeContainer>
